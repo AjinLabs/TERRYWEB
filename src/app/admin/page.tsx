@@ -260,6 +260,22 @@ export default function AdminDashboardPage() {
     }
   };
 
+  // Stock Out & Auto-Delete (Saves Database Storage)
+  const handleStockOutProduct = async (product: Product) => {
+    if (
+      confirm(
+        `Mark "${product.name}" (${product.code}) as Stock Out?\n\nThis will automatically remove the garment and its data from the catalogue to save storage space.`
+      )
+    ) {
+      try {
+        await fetch(`/api/products/${product.id}`, { method: "DELETE" });
+        await loadDashboardData();
+      } catch (err) {
+        console.error("Failed to stock out", err);
+      }
+    }
+  };
+
   // Delete Product
   const handleDeleteProduct = async (id: string) => {
     if (!confirm("Are you sure you want to delete this product from the boutique?")) return;
@@ -740,22 +756,32 @@ export default function AdminDashboardPage() {
                       </div>
                     </div>
 
-                    <div className="pt-4 mt-3 border-t border-[#F0ECE1] flex items-center justify-between">
+                    <div className="pt-3 mt-3 border-t border-[#F0ECE1] space-y-2">
                       <button
-                        onClick={() => openEditProductModal(prod)}
-                        className="text-xs text-neutral-700 hover:text-black font-medium flex items-center space-x-1"
+                        onClick={() => handleStockOutProduct(prod)}
+                        className="w-full py-1.5 bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 text-[10px] uppercase tracking-wider font-semibold flex items-center justify-center space-x-1 transition-colors"
+                        title="Mark Stock Out and auto-delete to save database storage"
                       >
-                        <Edit size={13} />
-                        <span>Edit</span>
+                        <span>⚡ Mark Stock Out (Auto-Delete)</span>
                       </button>
 
-                      <button
-                        onClick={() => handleDeleteProduct(prod.id)}
-                        className="text-xs text-red-600 hover:text-red-800 font-medium flex items-center space-x-1"
-                      >
-                        <Trash2 size={13} />
-                        <span>Delete</span>
-                      </button>
+                      <div className="flex items-center justify-between pt-1">
+                        <button
+                          onClick={() => openEditProductModal(prod)}
+                          className="text-xs text-neutral-700 hover:text-black font-medium flex items-center space-x-1"
+                        >
+                          <Edit size={13} />
+                          <span>Edit</span>
+                        </button>
+
+                        <button
+                          onClick={() => handleDeleteProduct(prod.id)}
+                          className="text-xs text-red-600 hover:text-red-800 font-medium flex items-center space-x-1"
+                        >
+                          <Trash2 size={13} />
+                          <span>Delete</span>
+                        </button>
+                      </div>
                     </div>
                   </div>
                 ))}

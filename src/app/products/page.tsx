@@ -65,6 +65,10 @@ function ProductsContent() {
   const filteredProducts = useMemo(() => {
     return products
       .filter((p) => {
+        // Exclude sold out / stock out garments
+        if (p.availability === "Sold Out") {
+          return false;
+        }
         // Size filter
         if (selectedSize && !p.sizes.includes(selectedSize)) {
           return false;

@@ -2,9 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { AuthProvider } from "@/lib/authContext";
 import { CartProvider } from "@/lib/cartContext";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
-import CartDrawer from "@/components/CartDrawer";
+import AppLayout from "@/components/AppLayout";
 
 export const metadata: Metadata = {
   title: "TERRY WOMEN — Luxury Boutique Garments & Haute Pret",
@@ -33,10 +31,7 @@ export default function RootLayout({
       <body className="bg-[#FAF9F5] text-neutral-900 min-h-screen flex flex-col selection:bg-neutral-900 selection:text-white">
         <AuthProvider>
           <CartProvider>
-            <Navbar />
-            <main className="flex-1">{children}</main>
-            <CartDrawer />
-            <Footer />
+            <AppLayout>{children}</AppLayout>
           </CartProvider>
         </AuthProvider>
       </body>

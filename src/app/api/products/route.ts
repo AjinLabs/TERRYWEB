@@ -14,6 +14,12 @@ export async function GET(req: NextRequest) {
 
     let products = getProducts();
 
+    const session = getSessionFromRequest(req);
+    const isAdmin = session?.role === "admin";
+    if (!isAdmin) {
+      products = products.filter((p) => p.availability !== "Sold Out");
+    }
+
     if (search) {
       products = products.filter(
         (p) =>
