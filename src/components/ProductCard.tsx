@@ -93,28 +93,14 @@ export default function ProductCard({ product }: Props) {
             </h3>
           </Link>
 
-          {/* Sizes available tags */}
-          <div className="flex items-center space-x-1.5 mt-2">
-            <span className="text-[10px] text-neutral-400 uppercase tracking-wider">Sizes:</span>
-            <div className="flex items-center space-x-1">
-              {product.sizes.map((s) => (
-                <button
-                  key={s}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    setSelectedSize(s);
-                  }}
-                  className={`text-[9px] font-semibold px-1.5 py-0.5 border transition-colors ${
-                    selectedSize === s
-                      ? "bg-black text-white border-black"
-                      : "bg-[#F7F5EE] text-neutral-700 border-neutral-200 hover:border-neutral-400"
-                  }`}
-                >
-                  {s}
-                </button>
-              ))}
-            </div>
+          {/* Single Unique Size Badge */}
+          <div className="flex items-center space-x-2 mt-2">
+            <span className="text-[10px] font-bold px-2 py-0.5 bg-neutral-900 text-white uppercase tracking-wider">
+              Size {product.sizes[0]}
+            </span>
+            <span className="text-[10px] text-[#0D3D2E] font-medium uppercase tracking-wider">
+              1-of-1 Piece
+            </span>
           </div>
         </div>
 
@@ -132,7 +118,7 @@ export default function ProductCard({ product }: Props) {
           </div>
 
           <span className="text-[10px] text-neutral-500 uppercase tracking-wider">
-            {product.colours.length} {product.colours.length === 1 ? "Colour" : "Colours"}
+            {product.colours[0] || "Curated"}
           </span>
         </div>
       </div>

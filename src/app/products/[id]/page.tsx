@@ -7,9 +7,11 @@ import { useParams, useRouter } from "next/navigation";
 import { Product, ProductSize, ProductColor, ALL_COLORS } from "@/types";
 import { useCart } from "@/lib/cartContext";
 import WhatsAppCheckoutModal from "@/components/WhatsAppCheckoutModal";
+import RazorpayModal from "@/components/RazorpayModal";
 import {
   MessageCircle,
   ShoppingBag,
+  CreditCard,
   Shield,
   Truck,
   RotateCcw,
@@ -33,6 +35,7 @@ export default function ProductDetailPage() {
   const [quantity, setQuantity] = useState(1);
   const [addedNotice, setAddedNotice] = useState(false);
   const [directCheckoutOpen, setDirectCheckoutOpen] = useState(false);
+  const [razorpayModalOpen, setRazorpayModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<"fabric" | "fit" | "care" | "delivery">("fabric");
 
   const { addItem, setIsCartOpen } = useCart();
@@ -200,92 +203,45 @@ export default function ProductDetailPage() {
               {product.description}
             </p>
 
-            {/* Size Selector (M, L, XL, XXL) */}
+            {/* Single Unique Garment Size */}
             <div className="pt-2">
-              <div className="flex justify-between items-center mb-2.5">
+              <div className="flex justify-between items-center mb-2">
                 <span className="text-[11px] uppercase tracking-widest font-semibold text-neutral-800">
-                  Select Size: <span className="font-bold text-black">{selectedSize}</span>
+                  Exclusive Garment Size
                 </span>
-                <span className="text-[10px] uppercase tracking-wider text-neutral-500">
-                  Standard Boutique Fit
+                <span className="text-[10px] text-[#0D3D2E] font-semibold uppercase tracking-wider">
+                  1-of-1 Piece Only
                 </span>
               </div>
-              <div className="grid grid-cols-4 gap-2.5">
-                {product.sizes.map((sz) => (
-                  <button
-                    key={sz}
-                    onClick={() => setSelectedSize(sz)}
-                    className={`py-3 text-xs font-semibold uppercase tracking-wider border transition-all ${
-                      selectedSize === sz
-                        ? "bg-black text-white border-black shadow-sm"
-                        : "bg-white text-neutral-800 border-neutral-300 hover:border-black"
-                    }`}
-                  >
-                    {sz}
-                  </button>
-                ))}
+              <div className="p-3.5 bg-neutral-900 text-white flex items-center justify-between">
+                <div>
+                  <span className="text-base font-bold tracking-wider font-mono">SIZE {product.sizes[0]}</span>
+                  <span className="block text-[11px] text-neutral-400 mt-0.5">
+                    This handcrafted design is uniquely tailored in Size {product.sizes[0]}.
+                  </span>
+                </div>
+                <span className="px-2.5 py-1 bg-neutral-800 text-neutral-200 text-[10px] uppercase tracking-wider font-semibold">
+                  {product.colours[0]}
+                </span>
               </div>
             </div>
 
-            {/* Colour Selector */}
-            <div className="pt-2">
-              <span className="text-[11px] uppercase tracking-widest font-semibold text-neutral-800 block mb-2.5">
-                Select Colour: <span className="font-bold text-black">{selectedColour}</span>
-              </span>
-              <div className="flex flex-wrap gap-2">
-                {product.colours.map((colorName) => {
-                  const colorDef = ALL_COLORS.find(
-                    (c) => c.name.toLowerCase() === colorName.toLowerCase()
-                  );
-                  const isSelected = selectedColour === colorName;
-                  return (
-                    <button
-                      key={colorName}
-                      onClick={() => setSelectedColour(colorName)}
-                      className={`flex items-center space-x-2 px-3 py-1.5 text-xs border transition-all ${
-                        isSelected
-                          ? "border-black bg-neutral-100 font-semibold text-black"
-                          : "border-neutral-200 bg-white text-neutral-700 hover:border-neutral-400"
-                      }`}
-                    >
-                      <span
-                        className="w-3.5 h-3.5 rounded-full border border-neutral-300"
-                        style={{ backgroundColor: colorDef?.hex || "#999" }}
-                      />
-                      <span>{colorName}</span>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
+            {/* Actions: Razorpay Demo, Add to Bag, WhatsApp */}
+            <div className="space-y-2.5 pt-4">
+              <button
+                onClick={() => {
+                  addItem(product, product.sizes[0], product.colours[0], 1);
+                  setRazorpayModalOpen(true);
+                }}
+                className="w-full py-4 bg-[#3395FF] hover:bg-[#2080ea] text-white text-xs uppercase tracking-widest font-semibold transition-all flex items-center justify-center space-x-2 shadow-md active:scale-[0.99]"
+              >
+                <CreditCard size={18} />
+                <span>Pay ₹{product.price.toLocaleString("en-IN")} via Razorpay (Demo)</span>
+              </button>
 
-            {/* Quantity Selector */}
-            <div className="pt-2 flex items-center space-x-4">
-              <span className="text-[11px] uppercase tracking-widest font-semibold text-neutral-800">
-                Quantity
-              </span>
-              <div className="flex items-center border border-neutral-300 bg-white">
-                <button
-                  onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-                  className="px-3 py-1.5 text-neutral-600 hover:bg-neutral-100"
-                >
-                  -
-                </button>
-                <span className="px-4 text-xs font-semibold">{quantity}</span>
-                <button
-                  onClick={() => setQuantity((q) => q + 1)}
-                  className="px-3 py-1.5 text-neutral-600 hover:bg-neutral-100"
-                >
-                  +
-                </button>
-              </div>
-            </div>
-
-            {/* Actions: Add to Bag & Direct WhatsApp Order */}
-            <div className="space-y-3 pt-4">
               <button
                 onClick={handleAddToCart}
-                className="w-full py-4 bg-black hover:bg-neutral-800 text-white text-xs uppercase tracking-widest font-medium transition-all flex items-center justify-center space-x-2 shadow-sm"
+                className="w-full py-3.5 bg-black hover:bg-neutral-800 text-white text-xs uppercase tracking-widest font-medium transition-all flex items-center justify-center space-x-2 shadow-sm"
               >
                 {addedNotice ? (
                   <>
@@ -302,21 +258,21 @@ export default function ProductDetailPage() {
 
               <button
                 onClick={handleOrderDirectWhatsApp}
-                className="w-full py-4 bg-[#25D366] hover:bg-[#20ba59] text-white text-xs uppercase tracking-widest font-semibold transition-all flex items-center justify-center space-x-2 shadow-md"
+                className="w-full py-3 bg-[#25D366] hover:bg-[#20ba59] text-white text-xs uppercase tracking-widest font-semibold transition-all flex items-center justify-center space-x-2 shadow-sm"
               >
-                <MessageCircle size={18} />
+                <MessageCircle size={16} />
                 <span>Order via WhatsApp (+91 83308 89632)</span>
               </button>
             </div>
 
-            {/* Concierge Guarantee Info */}
-            <div className="bg-[#F4F1EA] p-4 border border-[#E5E3DC] text-[11px] text-neutral-600 space-y-2">
-              <div className="flex items-center space-x-2 text-neutral-900 font-medium">
-                <Sparkles size={14} className="text-[#0D3D2E]" />
-                <span>Direct WhatsApp Verification</span>
+            {/* Unique 1-of-1 Piece Guarantee */}
+            <div className="bg-[#FAF9F5] p-3.5 border border-[#E5E3DC] text-[11px] text-neutral-600 space-y-1">
+              <div className="flex items-center space-x-1.5 text-neutral-900 font-semibold">
+                <Sparkles size={13} className="text-[#0D3D2E]" />
+                <span>Auto-Delete Upon Purchase</span>
               </div>
               <p className="leading-relaxed">
-                When you click Order via WhatsApp, your garment selection, size, and photo links will be pre-formatted for direct verification with our boutique manager.
+                When you complete payment via Razorpay, this unique piece is immediately reserved and permanently deleted from our catalogue.
               </p>
             </div>
           </div>
@@ -385,6 +341,11 @@ export default function ProductDetailPage() {
       <WhatsAppCheckoutModal
         isOpen={directCheckoutOpen}
         onClose={() => setDirectCheckoutOpen(false)}
+      />
+
+      <RazorpayModal
+        isOpen={razorpayModalOpen}
+        onClose={() => setRazorpayModalOpen(false)}
       />
     </div>
   );

@@ -4,8 +4,9 @@ import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useCart } from "@/lib/cartContext";
-import { X, Trash2, Plus, Minus, MessageCircle, ArrowRight } from "lucide-react";
+import { X, Trash2, Plus, Minus, MessageCircle, ArrowRight, CreditCard } from "lucide-react";
 import WhatsAppCheckoutModal from "./WhatsAppCheckoutModal";
+import RazorpayModal from "./RazorpayModal";
 
 export default function CartDrawer() {
   const {
@@ -18,6 +19,7 @@ export default function CartDrawer() {
   } = useCart();
 
   const [checkoutModalOpen, setCheckoutModalOpen] = useState(false);
+  const [razorpayOpen, setRazorpayOpen] = useState(false);
 
   if (!isCartOpen) return null;
 
@@ -180,15 +182,23 @@ export default function CartDrawer() {
                 </div>
 
                 <button
-                  onClick={() => setCheckoutModalOpen(true)}
-                  className="w-full py-4 bg-[#25D366] hover:bg-[#20ba59] text-white text-xs uppercase tracking-widest font-semibold flex items-center justify-center space-x-2 transition-all shadow-md active:scale-[0.99]"
+                  onClick={() => setRazorpayOpen(true)}
+                  className="w-full py-3.5 bg-[#3395FF] hover:bg-[#2080ea] text-white text-xs uppercase tracking-widest font-semibold flex items-center justify-center space-x-2 transition-all shadow-md active:scale-[0.99]"
                 >
-                  <MessageCircle size={18} />
+                  <CreditCard size={17} />
+                  <span>Pay ₹{subtotal.toLocaleString("en-IN")} via Razorpay (Instant Reserve)</span>
+                </button>
+
+                <button
+                  onClick={() => setCheckoutModalOpen(true)}
+                  className="w-full py-3 bg-[#25D366] hover:bg-[#20ba59] text-white text-xs uppercase tracking-widest font-semibold flex items-center justify-center space-x-2 transition-all shadow-sm active:scale-[0.99]"
+                >
+                  <MessageCircle size={16} />
                   <span>Order via WhatsApp</span>
                 </button>
 
                 <p className="text-[10px] text-center text-neutral-500 leading-tight">
-                  No online card payment required · Direct boutique concierge verification & manual UPI QR payment
+                  Instant Razorpay Demo (Auto-Deletes garment upon purchase) or Direct WhatsApp Concierge
                 </p>
               </div>
             )}
@@ -199,6 +209,11 @@ export default function CartDrawer() {
       <WhatsAppCheckoutModal
         isOpen={checkoutModalOpen}
         onClose={() => setCheckoutModalOpen(false)}
+      />
+
+      <RazorpayModal
+        isOpen={razorpayOpen}
+        onClose={() => setRazorpayOpen(false)}
       />
     </>
   );

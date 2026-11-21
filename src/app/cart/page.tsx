@@ -5,11 +5,13 @@ import Image from "next/image";
 import Link from "next/link";
 import { useCart } from "@/lib/cartContext";
 import WhatsAppCheckoutModal from "@/components/WhatsAppCheckoutModal";
-import { Trash2, Plus, Minus, MessageCircle, ArrowRight, ShieldCheck, ShoppingBag } from "lucide-react";
+import RazorpayModal from "@/components/RazorpayModal";
+import { Trash2, Plus, Minus, MessageCircle, ArrowRight, ShieldCheck, ShoppingBag, CreditCard } from "lucide-react";
 
 export default function CartPage() {
   const { items, removeItem, updateQuantity, clearCart, subtotal } = useCart();
   const [checkoutModalOpen, setCheckoutModalOpen] = useState(false);
+  const [razorpayOpen, setRazorpayOpen] = useState(false);
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -172,8 +174,16 @@ export default function CartPage() {
               </div>
 
               <button
+                onClick={() => setRazorpayOpen(true)}
+                className="w-full py-4 bg-[#3395FF] hover:bg-[#2080ea] text-white text-xs uppercase tracking-widest font-semibold flex items-center justify-center space-x-2 transition-all shadow-md active:scale-[0.99]"
+              >
+                <CreditCard size={18} />
+                <span>Pay ₹{subtotal.toLocaleString("en-IN")} via Razorpay (Instant Reserve)</span>
+              </button>
+
+              <button
                 onClick={() => setCheckoutModalOpen(true)}
-                className="w-full py-4 bg-[#25D366] hover:bg-[#20ba59] text-white text-xs uppercase tracking-widest font-semibold flex items-center justify-center space-x-2 transition-all shadow-md active:scale-[0.99]"
+                className="w-full py-3.5 bg-[#25D366] hover:bg-[#20ba59] text-white text-xs uppercase tracking-widest font-semibold flex items-center justify-center space-x-2 transition-all shadow-sm active:scale-[0.99]"
               >
                 <MessageCircle size={18} />
                 <span>Order via WhatsApp</span>
@@ -182,10 +192,10 @@ export default function CartPage() {
               <div className="pt-4 border-t border-[#E0DCCE] space-y-2 text-[11px] text-neutral-500">
                 <div className="flex items-center space-x-2">
                   <ShieldCheck size={14} className="text-[#0D3D2E]" />
-                  <span>No payment gateway required</span>
+                  <span>1-of-1 Piece Auto-Delete Guarantee</span>
                 </div>
                 <p className="leading-relaxed">
-                  Your WhatsApp will open with your order enquiry. The boutique administrator will check availability and send you our UPI payment QR code directly.
+                  When you complete payment via Razorpay, each unique piece in your bag is immediately reserved and permanently deleted from our live boutique catalogue.
                 </p>
               </div>
             </div>
@@ -196,6 +206,11 @@ export default function CartPage() {
       <WhatsAppCheckoutModal
         isOpen={checkoutModalOpen}
         onClose={() => setCheckoutModalOpen(false)}
+      />
+
+      <RazorpayModal
+        isOpen={razorpayOpen}
+        onClose={() => setRazorpayOpen(false)}
       />
     </div>
   );

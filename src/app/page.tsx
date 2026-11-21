@@ -82,7 +82,7 @@ export default function HomePage() {
             Boutique Garments & Dresses
           </h1>
           <p className="text-xs text-neutral-500 mt-1 font-light">
-            Showing {filteredProducts.length} handcrafted pieces · Direct WhatsApp ordering
+            Showing {filteredProducts.length} exclusive 1-of-1 pieces · Razorpay Reserve & WhatsApp Concierge (+91 83308 89632)
           </p>
         </div>
 
