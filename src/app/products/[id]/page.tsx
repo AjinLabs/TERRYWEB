@@ -4,21 +4,17 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
-import { Product, ProductSize, ProductColor, ALL_COLORS } from "@/types";
+import { Product, ProductSize, ProductColor } from "@/types";
 import { useCart } from "@/lib/cartContext";
-import WhatsAppCheckoutModal from "@/components/WhatsAppCheckoutModal";
-import RazorpayModal from "@/components/RazorpayModal";
 import {
-  MessageCircle,
   ShoppingBag,
-  CreditCard,
   Shield,
   Truck,
-  RotateCcw,
   Check,
   ChevronRight,
   Sparkles,
-  Info,
+  ArrowRight,
+  ShieldCheck,
   Loader2,
 } from "lucide-react";
 
@@ -30,12 +26,7 @@ export default function ProductDetailPage() {
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
   const [selectedImage, setSelectedImage] = useState<string>("");
-  const [selectedSize, setSelectedSize] = useState<ProductSize>("M");
-  const [selectedColour, setSelectedColour] = useState<ProductColor>("Black");
-  const [quantity, setQuantity] = useState(1);
   const [addedNotice, setAddedNotice] = useState(false);
-  const [directCheckoutOpen, setDirectCheckoutOpen] = useState(false);
-  const [razorpayModalOpen, setRazorpayModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<"fabric" | "fit" | "care" | "delivery">("fabric");
 
   const { addItem, setIsCartOpen } = useCart();
@@ -48,31 +39,25 @@ export default function ProductDetailPage() {
         const data = await res.json();
         if (data.product) {
           setProduct(data.product);
-          setSelectedImage(data.product.images[0] || "");
-          if (data.product.sizes && data.product.sizes.length > 0) {
-            setSelectedSize(data.product.sizes[0]);
-          }
-          if (data.product.colours && data.product.colours.length > 0) {
-            setSelectedColour(data.product.colours[0]);
+          if (data.product.images && data.product.images.length > 0) {
+            setSelectedImage(data.product.images[0]);
           }
         }
-      } catch (e) {
-        console.error("Error loading product:", e);
+      } catch (err) {
+        console.error("Error loading product:", err);
       } finally {
         setLoading(false);
       }
     }
-    if (idOrSlug) {
-      fetchProduct();
-    }
+    fetchProduct();
   }, [idOrSlug]);
 
   if (loading) {
     return (
-      <div className="min-h-[60vh] flex flex-col items-center justify-center">
-        <Loader2 size={32} className="animate-spin text-neutral-500 mb-3" />
-        <span className="text-xs uppercase tracking-widest text-neutral-500 font-medium">
-          Loading Garment Details...
+      <div className="min-h-[60vh] flex flex-col items-center justify-center space-y-4">
+        <Loader2 className="animate-spin text-neutral-400" size={32} />
+        <span className="text-xs uppercase tracking-widest text-neutral-500 font-light">
+          Presenting Atelier Garment...
         </span>
       </div>
     );
@@ -80,31 +65,31 @@ export default function ProductDetailPage() {
 
   if (!product) {
     return (
-      <div className="max-w-2xl mx-auto py-24 px-4 text-center">
-        <h2 className="font-serif text-3xl text-neutral-900 mb-2">Garment Not Found</h2>
-        <p className="text-xs text-neutral-600 mb-6">
-          The requested design may have been archived or retired from our boutique collection.
+      <div className="max-w-xl mx-auto px-4 py-24 text-center">
+        <h2 className="font-serif text-3xl text-neutral-800 mb-3">Garment Not Found</h2>
+        <p className="text-xs text-neutral-500 mb-6">
+          This piece may have been acquired and auto-deleted from our boutique catalog.
         </p>
         <Link
           href="/products"
-          className="px-6 py-3 bg-black text-white text-xs uppercase tracking-widest font-medium"
+          className="inline-flex px-6 py-3 bg-[#0D3D2E] text-white text-xs uppercase tracking-widest font-medium hover:bg-[#08281e]"
         >
-          Return to Collection
+          Explore Active Collection
         </Link>
       </div>
     );
   }
 
   const handleAddToCart = () => {
-    addItem(product, selectedSize, selectedColour, quantity);
+    addItem(product, product.sizes[0], product.colours[0], 1);
     setAddedNotice(true);
     setTimeout(() => setAddedNotice(false), 2000);
+    setIsCartOpen(true);
   };
 
-  const handleOrderDirectWhatsApp = () => {
-    // Add to cart and open WhatsApp checkout modal immediately
-    addItem(product, selectedSize, selectedColour, quantity);
-    setDirectCheckoutOpen(true);
+  const handleBuyNow = () => {
+    addItem(product, product.sizes[0], product.colours[0], 1);
+    router.push("/checkout");
   };
 
   return (
@@ -123,9 +108,9 @@ export default function ProductDetailPage() {
       </nav>
 
       {/* Main Product Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
         
-        {/* Left: Gallery (Thumbnails + Primary Image) */}
+        {/* Left: Product Imagery */}
         <div className="lg:col-span-7 flex flex-col-reverse md:flex-row gap-4">
           {/* Thumbnails Column (if more than 1 image) */}
           {product.images.length > 1 && (
@@ -226,26 +211,23 @@ export default function ProductDetailPage() {
               </div>
             </div>
 
-            {/* Actions: Razorpay Demo, Add to Bag, WhatsApp */}
+            {/* Actions: Direct Buy Now & Add to Selection Bag */}
             <div className="space-y-2.5 pt-4">
               <button
-                onClick={() => {
-                  addItem(product, product.sizes[0], product.colours[0], 1);
-                  setRazorpayModalOpen(true);
-                }}
-                className="w-full py-4 bg-[#3395FF] hover:bg-[#2080ea] text-white text-xs uppercase tracking-widest font-semibold transition-all flex items-center justify-center space-x-2 shadow-md active:scale-[0.99]"
+                onClick={handleBuyNow}
+                className="w-full py-4 bg-[#0D3D2E] hover:bg-[#08281e] text-white text-xs uppercase tracking-widest font-semibold transition-all flex items-center justify-center space-x-2 shadow-md active:scale-[0.99] rounded-xs"
               >
-                <CreditCard size={18} />
-                <span>Pay ₹{product.price.toLocaleString("en-IN")} via Razorpay (Demo)</span>
+                <span>Buy Now · ₹{product.price.toLocaleString("en-IN")}</span>
+                <ArrowRight size={16} />
               </button>
 
               <button
                 onClick={handleAddToCart}
-                className="w-full py-3.5 bg-black hover:bg-neutral-800 text-white text-xs uppercase tracking-widest font-medium transition-all flex items-center justify-center space-x-2 shadow-sm"
+                className="w-full py-3.5 border border-black hover:bg-neutral-100 text-black text-xs uppercase tracking-widest font-medium transition-all flex items-center justify-center space-x-2 shadow-xs rounded-xs"
               >
                 {addedNotice ? (
                   <>
-                    <Check size={16} className="text-green-400" />
+                    <Check size={16} className="text-emerald-700" />
                     <span>Added to Bag</span>
                   </>
                 ) : (
@@ -255,25 +237,28 @@ export default function ProductDetailPage() {
                   </>
                 )}
               </button>
-
-              <button
-                onClick={handleOrderDirectWhatsApp}
-                className="w-full py-3 bg-[#25D366] hover:bg-[#20ba59] text-white text-xs uppercase tracking-widest font-semibold transition-all flex items-center justify-center space-x-2 shadow-sm"
-              >
-                <MessageCircle size={16} />
-                <span>Order via WhatsApp (+91 83308 89632)</span>
-              </button>
             </div>
 
-            {/* Unique 1-of-1 Piece Guarantee */}
-            <div className="bg-[#FAF9F5] p-3.5 border border-[#E5E3DC] text-[11px] text-neutral-600 space-y-1">
-              <div className="flex items-center space-x-1.5 text-neutral-900 font-semibold">
-                <Sparkles size={13} className="text-[#0D3D2E]" />
-                <span>Auto-Delete Upon Purchase</span>
+            {/* Unique 1-of-1 Piece Guarantee & No Return Policy */}
+            <div className="space-y-2 pt-2">
+              <div className="bg-[#FAF9F5] p-3.5 border border-[#E5E3DC] text-[11px] text-neutral-600 space-y-1">
+                <div className="flex items-center space-x-1.5 text-neutral-900 font-semibold">
+                  <Sparkles size={13} className="text-[#0D3D2E]" />
+                  <span>Auto-Delete Guarantee</span>
+                </div>
+                <p className="leading-relaxed">
+                  When you complete checkout, this unique piece is immediately reserved for you and permanently deleted from our live catalogue.
+                </p>
               </div>
-              <p className="leading-relaxed">
-                When you complete payment via Razorpay, this unique piece is immediately reserved and permanently deleted from our catalogue.
-              </p>
+
+              <div className="bg-amber-50 p-3 border border-amber-200 text-amber-900 text-[11px] space-y-0.5 rounded-xs">
+                <span className="font-semibold uppercase tracking-wider block text-[10px]">
+                  ⚠️ Policy: No Replacement & No Return
+                </span>
+                <p className="leading-tight text-[10px] text-amber-800">
+                  Because every piece in our collection is an exclusive 1-of-1 handcrafted garment, all sales are final.
+                </p>
+              </div>
             </div>
           </div>
 
@@ -330,23 +315,13 @@ export default function ProductDetailPage() {
               )}
               {activeTab === "delivery" && (
                 <p>
-                  Handcrafted and dispatched within 24–48 hours from our Kochi atelier via Delhivery Express or India Post. Tracking ID provided directly upon shipment.
+                  Handcrafted and dispatched within 24–48 hours from our Kochi atelier via Delhivery Express or India Post with online tracking.
                 </p>
               )}
             </div>
           </div>
         </div>
       </div>
-
-      <WhatsAppCheckoutModal
-        isOpen={directCheckoutOpen}
-        onClose={() => setDirectCheckoutOpen(false)}
-      />
-
-      <RazorpayModal
-        isOpen={razorpayModalOpen}
-        onClose={() => setRazorpayModalOpen(false)}
-      />
     </div>
   );
 }

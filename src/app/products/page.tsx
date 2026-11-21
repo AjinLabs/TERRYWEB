@@ -298,10 +298,10 @@ function ProductsContent() {
           {/* Boutique Note */}
           <div className="p-4 bg-[#F7F5EE] border border-[#E5E3DC] text-[11px] text-neutral-600 space-y-1.5 leading-relaxed">
             <span className="font-semibold text-neutral-900 block uppercase tracking-wider text-[10px]">
-              Direct WhatsApp Assistance
+              1-of-1 Piece Policy
             </span>
             <p>
-              Have questions regarding bust measurements, fabric drape, or custom colours? Message our atelier concierge at +91 83308 89632.
+              Each handcrafted piece is tailored in a single exclusive size. Upon online purchase, garments are permanently auto-deleted from our live catalog. No return or replacement is accepted.
             </p>
           </div>
         </aside>
@@ -469,7 +469,7 @@ function ProductsContent() {
                 No matching garments found
               </h3>
               <p className="text-xs text-neutral-500 max-w-md mx-auto mb-6">
-                Try loosening your filters or explore other sizes and colours. Our atelier can also custom craft specific sizes on WhatsApp.
+                Try loosening your filters or explore other sizes and colours in our boutique collection.
               </p>
               <button
                 onClick={resetFilters}

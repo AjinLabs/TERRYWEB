@@ -7,7 +7,7 @@ import AppLayout from "@/components/AppLayout";
 export const metadata: Metadata = {
   title: "TERRY WOMEN — Luxury Boutique Garments & Haute Pret",
   description:
-    "Discover handcrafted feminine silhouettes, structured corsets, and timeless bespoke blouses. Order directly via WhatsApp concierge with pan-India delivery.",
+    "Discover handcrafted feminine silhouettes, structured corsets, and timeless bespoke blouses. Exclusive 1-of-1 pieces with express delivery across Kerala and pan-India.",
   icons: {
     icon: "/images/logo.jpg",
   },

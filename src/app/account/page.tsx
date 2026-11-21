@@ -258,7 +258,7 @@ export default function CustomerAccountPage() {
                 No orders or enquiries placed yet
               </h3>
               <p className="text-xs text-neutral-500 mb-6 max-w-sm mx-auto">
-                Any enquiry you submit via WhatsApp is automatically logged here with real-time status and shipping tracking.
+                Any order you place is automatically logged here with real-time status and shipping tracking.
               </p>
               <Link
                 href="/products"
@@ -404,7 +404,7 @@ export default function CustomerAccountPage() {
         <div className="space-y-6">
           <div className="flex justify-between items-center">
             <p className="text-xs text-neutral-500">
-              Save multiple delivery addresses for fast WhatsApp order placement.
+              Save multiple delivery addresses for fast online checkout.
             </p>
             <button
               onClick={handleOpenAddAddress}

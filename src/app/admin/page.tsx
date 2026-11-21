@@ -20,6 +20,7 @@ import {
 import {
   ShieldCheck,
   Package,
+  ShoppingBag,
   Plus,
   Trash2,
   Edit,
@@ -438,7 +439,7 @@ export default function AdminDashboardPage() {
               {orders.length}
             </span>
             <span className="text-[11px] text-[#0D3D2E] font-medium mt-1 block">
-              Direct from WhatsApp
+              Boutique Online Orders
             </span>
           </div>
 
@@ -489,8 +490,8 @@ export default function AdminDashboardPage() {
                 : "text-neutral-500 hover:text-black"
             }`}
           >
-            <MessageCircle size={15} />
-            <span>WhatsApp Enquiries & Orders ({orders.length})</span>
+            <ShoppingBag size={15} />
+            <span>Orders & Enquiries ({orders.length})</span>
           </button>
 
           <button
@@ -514,7 +515,7 @@ export default function AdminDashboardPage() {
             }`}
           >
             <Settings size={15} />
-            <span>Store & WhatsApp Settings</span>
+            <span>Store & Payment Settings</span>
           </button>
         </div>
 
@@ -793,10 +794,10 @@ export default function AdminDashboardPage() {
         {activeSection === "settings" && (
           <div className="max-w-2xl bg-white border border-[#E5E3DC] p-8 shadow-sm">
             <h3 className="font-serif text-2xl text-neutral-900 mb-1">
-              Boutique Store & WhatsApp Configuration
+              Boutique Store & Payment Configuration
             </h3>
             <p className="text-xs text-neutral-500 mb-6">
-              Configure store identity, WhatsApp ordering recipient number, and manual UPI QR payment details.
+              Configure boutique store identity, concierge support contact, and UPI payment details.
             </p>
 
             {settingsSuccess && (
@@ -822,7 +823,7 @@ export default function AdminDashboardPage() {
 
               <div>
                 <label className="block text-[11px] uppercase tracking-wider text-neutral-700 font-semibold mb-1">
-                  Administrator WhatsApp Number (For incoming orders) *
+                  Concierge Support Phone Number *
                 </label>
                 <input
                   type="text"
@@ -833,7 +834,7 @@ export default function AdminDashboardPage() {
                   className="w-full border border-neutral-300 px-3.5 py-2.5 text-xs text-neutral-900 focus:outline-none focus:border-black font-mono font-bold"
                 />
                 <span className="text-[10px] text-neutral-500 mt-1 block">
-                  All customer cart orders will redirect to this configured WhatsApp phone number.
+                  Official boutique contact phone number.
                 </span>
               </div>
 
@@ -1132,7 +1133,7 @@ export default function AdminDashboardPage() {
             </button>
 
             <span className="text-[10px] uppercase tracking-widest text-[#0D3D2E] font-semibold block">
-              Manage WhatsApp Order
+              Manage Client Order
             </span>
             <h3 className="font-serif text-2xl text-neutral-900 mt-0.5 mb-4">
               Enquiry ID: {selectedOrder.id} ({selectedOrder.orderId || "Pending Confirmed"})
@@ -1145,16 +1146,10 @@ export default function AdminDashboardPage() {
                 <span className="font-semibold text-neutral-900">{selectedOrder.customerName}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-neutral-500">WhatsApp:</span>
-                <a
-                  href={`https://wa.me/${selectedOrder.customerPhone.replace(/\D/g, "")}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-[#0D3D2E] font-mono font-bold flex items-center space-x-1"
-                >
-                  <MessageCircle size={13} />
-                  <span>+91 {selectedOrder.customerPhone}</span>
-                </a>
+                <span className="text-neutral-500">Phone:</span>
+                <span className="text-[#0D3D2E] font-mono font-bold">
+                  {selectedOrder.customerPhone}
+                </span>
               </div>
               {selectedOrder.deliveryAddress && (
                 <div className="flex justify-between pt-1 border-t border-neutral-100">

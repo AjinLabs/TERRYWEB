@@ -15,13 +15,13 @@ import {
   Copy,
   Check,
   AlertCircle,
-  MessageCircle,
+  Mail,
   Loader2,
 } from "lucide-react";
 
 function TrackOrderContent() {
   const searchParams = useSearchParams();
-  const initialId = searchParams.get("id") || "";
+  const initialId = searchParams.get("id") || searchParams.get("orderId") || "";
 
   const [queryId, setQueryId] = useState(initialId);
   const [enquiry, setEnquiry] = useState<Enquiry | null>(null);
@@ -96,8 +96,8 @@ function TrackOrderContent() {
   };
 
   const steps = [
-    { title: "Enquiry Received", desc: "Concierge reviewing selection" },
-    { title: "Payment Verified", desc: "Manual QR payment confirmed" },
+    { title: "Order Placed", desc: "Order recorded in boutique system" },
+    { title: "Payment Verified", desc: "Online payment confirmed & 1-of-1 piece reserved" },
     { title: "Packed & Sealed", desc: "Boutique quality inspection" },
     { title: "In Transit", desc: "Handed to courier partner" },
     { title: "Delivered", desc: "Received by client" },
@@ -154,16 +154,14 @@ function TrackOrderContent() {
           <AlertCircle size={32} className="text-amber-600 mx-auto mb-2" />
           <h3 className="font-serif text-xl text-neutral-900">Record Not Found</h3>
           <p className="text-xs text-neutral-600 mt-1 mb-4 leading-relaxed">
-            We couldn&apos;t locate an order matching &ldquo;{queryId}&rdquo;. Please verify your ID or contact our concierge directly on WhatsApp.
+            We couldn&apos;t locate an order matching &ldquo;{queryId}&rdquo;. Please verify your ID or contact our concierge support at orders@terrywomen.com.
           </p>
           <a
-            href={`https://wa.me/918330889632?text=Hello%20TERRY%20WOMEN,%20I%20am%20inquiring%20about%20my%20order%20status%20for%20reference:%20${queryId}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center space-x-1.5 px-4 py-2 bg-[#25D366] text-white text-xs uppercase tracking-wider font-semibold"
+            href="mailto:orders@terrywomen.com"
+            className="inline-flex items-center space-x-1.5 px-4 py-2 bg-[#0D3D2E] hover:bg-[#08281e] text-white text-xs uppercase tracking-wider font-semibold rounded-xs"
           >
-            <MessageCircle size={14} />
-            <span>Check with Concierge (+91 83308 89632)</span>
+            <Mail size={14} />
+            <span>Contact Concierge Support</span>
           </a>
         </div>
       )}
@@ -356,7 +354,7 @@ function TrackOrderContent() {
                   </p>
                 </>
               ) : (
-                <span className="italic text-neutral-400">Delivery address shared on WhatsApp</span>
+                <span className="italic text-neutral-400">Delivery address confirmed at checkout</span>
               )}
             </div>
             <div className="sm:text-right">

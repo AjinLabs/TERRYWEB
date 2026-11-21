@@ -24,13 +24,13 @@ export default function Footer() {
           </div>
 
           <div className="flex items-start space-x-4">
-            <div className="p-3 bg-neutral-900 border border-neutral-800 rounded-full text-[#25D366]">
-              <MessageCircle size={20} />
+            <div className="p-3 bg-neutral-900 border border-neutral-800 rounded-full text-[#C5A880]">
+              <Shield size={20} />
             </div>
             <div>
-              <h4 className="font-serif text-lg text-white">WhatsApp Concierge Ordering</h4>
+              <h4 className="font-serif text-lg text-white">Instant Online Checkout</h4>
               <p className="text-xs text-neutral-400 mt-1 leading-relaxed">
-                Direct order assistance, custom sizing guidance, and manual QR payment on +91 83308 89632.
+                Secure digital checkout, automated 1-of-1 reserve, and fast dispatch across Kerala & India.
               </p>
             </div>
           </div>
@@ -77,15 +77,9 @@ export default function Footer() {
               Zara-inspired luxury boutique fashion. Contemporary feminine silhouettes designed for effortless distinction and modern allure.
             </p>
             <div className="pt-2">
-              <a
-                href="https://wa.me/918330889632"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center space-x-2 px-4 py-2 bg-[#0D3D2E] hover:bg-[#08281e] text-white text-xs uppercase tracking-wider font-medium rounded transition-colors"
-              >
-                <MessageCircle size={15} />
-                <span>Chat on WhatsApp</span>
-              </a>
+              <span className="inline-block px-3 py-1 bg-neutral-900 border border-neutral-800 text-[11px] text-[#C5A880] uppercase tracking-wider font-semibold">
+                No Return & No Replacement Policy
+              </span>
             </div>
           </div>
 
@@ -160,7 +154,7 @@ export default function Footer() {
             </h5>
             <div className="flex items-start space-x-2">
               <Phone size={14} className="mt-0.5 text-[#C5A880]" />
-              <span>+91 83308 89632 (WhatsApp Orders)</span>
+              <span>+91 83308 89632 (Client Concierge)</span>
             </div>
             <div className="flex items-start space-x-2">
               <Mail size={14} className="mt-0.5 text-[#C5A880]" />
@@ -186,14 +180,14 @@ export default function Footer() {
       {/* Bottom Legal bar */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 border-t border-neutral-800 text-[11px] text-neutral-500 flex flex-col md:flex-row items-center justify-between gap-4">
         <div>
-          © {new Date().getFullYear()} TERRY WOMEN Boutique. All Rights Reserved. Handcrafted Luxury Garments.
+          © {new Date().getFullYear()} TERRY WOMEN Boutique. All Rights Reserved. Exclusive Handcrafted Garments.
         </div>
         <div className="flex items-center space-x-6">
-          <span>Zero Online Gateway Risk</span>
+          <span>100% Encrypted Checkout</span>
           <span>•</span>
-          <span>Direct WhatsApp Order Verification</span>
+          <span>Immediate 1-of-1 Catalog Auto-Delete</span>
           <span>•</span>
-          <span>Manual UPI QR Confirmation</span>
+          <span>Express Delivery Across Kerala & India</span>
         </div>
       </div>
     </footer>

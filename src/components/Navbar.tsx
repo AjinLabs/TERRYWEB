@@ -25,7 +25,7 @@ export default function Navbar() {
     <>
       {/* Announcement Bar */}
       <div className="bg-[#0D3D2E] text-[#F4F2EB] text-[11px] tracking-widest uppercase py-2 px-4 text-center font-medium border-b border-[#08281e]">
-        <span>Complimentary Domestic Delivery on Boutique Orders · WhatsApp Concierge: +91 83308 89632</span>
+        <span>Complimentary Express Delivery Across Kerala & India · Handcrafted 1-of-1 Boutique Pieces · 100% Secure Online Checkout</span>
       </div>
 
       {/* Main Navigation */}
@@ -136,7 +136,7 @@ export default function Navbar() {
             <button
               onClick={() => setIsCartOpen(true)}
               className="relative p-1 hover:text-black transition-colors"
-              title="View Cart & Order via WhatsApp"
+              title="Shopping Selection Bag"
             >
               <ShoppingBag size={21} strokeWidth={1.5} />
               {totalItems > 0 && (
