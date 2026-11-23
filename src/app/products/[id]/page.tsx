@@ -12,10 +12,14 @@ import {
   Truck,
   Check,
   ChevronRight,
+  ChevronLeft,
   Sparkles,
   ArrowRight,
   ShieldCheck,
   Loader2,
+  Maximize2,
+  X,
+  ZoomIn
 } from "lucide-react";
 
 export default function ProductDetailPage() {
@@ -28,6 +32,12 @@ export default function ProductDetailPage() {
   const [selectedImage, setSelectedImage] = useState<string>("");
   const [addedNotice, setAddedNotice] = useState(false);
   const [activeTab, setActiveTab] = useState<"fabric" | "fit" | "care" | "delivery">("fabric");
+
+  // Image Zoom & Expanded View States
+  const [isZoomed, setIsZoomed] = useState(false);
+  const [zoomPos, setZoomPos] = useState({ x: 50, y: 50 });
+  const [isLightboxOpen, setIsLightboxOpen] = useState(false);
+  const [lightboxIndex, setLightboxIndex] = useState(0);
 
   const { addItem, setIsCartOpen } = useCart();
 
@@ -51,6 +61,24 @@ export default function ProductDetailPage() {
     }
     fetchProduct();
   }, [idOrSlug]);
+
+  // Keyboard navigation for Lightbox
+  useEffect(() => {
+    if (!isLightboxOpen || !product) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setIsLightboxOpen(false);
+      } else if (e.key === "ArrowRight") {
+        setLightboxIndex((prev) => (prev + 1) % product.images.length);
+      } else if (e.key === "ArrowLeft") {
+        setLightboxIndex((prev) => (prev - 1 + product.images.length) % product.images.length);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isLightboxOpen, product]);
 
   if (loading) {
     return (
@@ -92,6 +120,18 @@ export default function ProductDetailPage() {
     router.push("/checkout");
   };
 
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const { left, top, width, height } = e.currentTarget.getBoundingClientRect();
+    const x = ((e.clientX - left) / width) * 100;
+    const y = ((e.clientY - top) / height) * 100;
+    setZoomPos({ x, y });
+  };
+
+  const openLightboxAt = (idx: number) => {
+    setLightboxIndex(idx);
+    setIsLightboxOpen(true);
+  };
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
       {/* Breadcrumb Navigation */}
@@ -110,20 +150,25 @@ export default function ProductDetailPage() {
       {/* Main Product Layout */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
         
-        {/* Left: Product Imagery */}
+        {/* Left: Product Imagery with Apple Spring Zoom & Expansion */}
         <div className="lg:col-span-7 flex flex-col-reverse md:flex-row gap-4">
+          
           {/* Thumbnails Column (if more than 1 image) */}
           {product.images.length > 1 && (
-            <div className="flex md:flex-col gap-3 overflow-x-auto md:overflow-y-auto max-h-[600px] shrink-0">
+            <div className="flex md:flex-col gap-3 overflow-x-auto md:overflow-y-auto max-h-[600px] shrink-0 pb-2 md:pb-0">
               {product.images.map((imgUrl, idx) => (
                 <button
                   key={idx}
-                  onClick={() => setSelectedImage(imgUrl)}
-                  className={`relative w-16 h-22 md:w-20 md:h-26 bg-[#F4F1EA] border transition-all overflow-hidden ${
+                  onClick={() => {
+                    setSelectedImage(imgUrl);
+                    setLightboxIndex(idx);
+                  }}
+                  className={`relative w-16 h-22 md:w-20 md:h-26 bg-[#F4F1EA] border transition-all duration-300 overflow-hidden press-scale rounded-xs ${
                     selectedImage === imgUrl
-                      ? "border-black ring-1 ring-black"
-                      : "border-neutral-200 opacity-70 hover:opacity-100"
+                      ? "border-black ring-2 ring-black scale-105 shadow-md"
+                      : "border-neutral-200 opacity-70 hover:opacity-100 hover:scale-102"
                   }`}
+                  aria-label={`View photo ${idx + 1}`}
                 >
                   <Image
                     src={imgUrl}
@@ -136,20 +181,44 @@ export default function ProductDetailPage() {
             </div>
           )}
 
-          {/* Large Main Feature Image */}
-          <div className="relative flex-1 aspect-[3/4] bg-[#F7F5EE] border border-[#E5E3DC] overflow-hidden">
-            <Image
-              src={selectedImage || product.images[0] || "/images/placeholder.jpg"}
-              alt={product.name}
-              fill
-              priority
-              className="object-cover object-top transition-transform duration-500 hover:scale-105"
-            />
+          {/* Large Main Feature Image with Cursor Zoom & Click-to-Expand */}
+          <div
+            className="relative flex-1 aspect-[3/4] bg-[#F7F5EE] border border-[#E5E3DC] overflow-hidden group cursor-zoom-in rounded-xs"
+            onMouseEnter={() => setIsZoomed(true)}
+            onMouseLeave={() => setIsZoomed(false)}
+            onMouseMove={handleMouseMove}
+            onClick={() => openLightboxAt(product.images.indexOf(selectedImage) >= 0 ? product.images.indexOf(selectedImage) : 0)}
+          >
+            {/* The Image itself with smooth spring zoom */}
+            <div
+              key={selectedImage}
+              className="relative w-full h-full animate-zoom-in transition-transform duration-300 ease-out"
+              style={{
+                transformOrigin: `${zoomPos.x}% ${zoomPos.y}%`,
+                transform: isZoomed ? "scale(1.5)" : "scale(1)"
+              }}
+            >
+              <Image
+                src={selectedImage || product.images[0] || "/images/placeholder.jpg"}
+                alt={product.name}
+                fill
+                priority
+                className="object-cover object-top select-none pointer-events-none"
+              />
+            </div>
+
+            {/* Badges */}
             {product.isNewArrival && (
-              <span className="absolute top-4 left-4 px-2.5 py-1 bg-black text-white text-[10px] uppercase tracking-widest font-semibold">
+              <span className="absolute top-4 left-4 px-2.5 py-1 bg-black text-white text-[10px] uppercase tracking-widest font-semibold pointer-events-none shadow-sm">
                 NEW ARRIVAL
               </span>
             )}
+
+            {/* Click to Expand Pill on hover */}
+            <div className="absolute bottom-4 right-4 px-3 py-1.5 bg-black/75 backdrop-blur-md text-white text-[11px] uppercase tracking-wider font-medium rounded-full opacity-80 group-hover:opacity-100 transition-opacity flex items-center space-x-1.5 pointer-events-none shadow-md">
+              <Maximize2 size={13} />
+              <span>Tap to Expand</span>
+            </div>
           </div>
         </div>
 
@@ -198,14 +267,14 @@ export default function ProductDetailPage() {
                   1-of-1 Piece Only
                 </span>
               </div>
-              <div className="p-3.5 bg-neutral-900 text-white flex items-center justify-between">
+              <div className="p-3.5 bg-neutral-900 text-white flex items-center justify-between rounded-xs">
                 <div>
                   <span className="text-base font-bold tracking-wider font-mono">SIZE {product.sizes[0]}</span>
                   <span className="block text-[11px] text-neutral-400 mt-0.5">
                     This handcrafted design is uniquely tailored in Size {product.sizes[0]}.
                   </span>
                 </div>
-                <span className="px-2.5 py-1 bg-neutral-800 text-neutral-200 text-[10px] uppercase tracking-wider font-semibold">
+                <span className="px-2.5 py-1 bg-neutral-800 text-neutral-200 text-[10px] uppercase tracking-wider font-semibold rounded-xs">
                   {product.colours[0]}
                 </span>
               </div>
@@ -215,7 +284,7 @@ export default function ProductDetailPage() {
             <div className="space-y-2.5 pt-4">
               <button
                 onClick={handleBuyNow}
-                className="w-full py-4 bg-[#0D3D2E] hover:bg-[#08281e] text-white text-xs uppercase tracking-widest font-semibold transition-all flex items-center justify-center space-x-2 shadow-md active:scale-[0.99] rounded-xs"
+                className="w-full py-4 bg-[#0D3D2E] hover:bg-[#08281e] text-white text-xs uppercase tracking-widest font-semibold transition-all flex items-center justify-center space-x-2 shadow-md press-scale rounded-xs"
               >
                 <span>Buy Now · ₹{product.price.toLocaleString("en-IN")}</span>
                 <ArrowRight size={16} />
@@ -223,7 +292,7 @@ export default function ProductDetailPage() {
 
               <button
                 onClick={handleAddToCart}
-                className="w-full py-3.5 border border-black hover:bg-neutral-100 text-black text-xs uppercase tracking-widest font-medium transition-all flex items-center justify-center space-x-2 shadow-xs rounded-xs"
+                className="w-full py-3.5 border border-black hover:bg-neutral-100 text-black text-xs uppercase tracking-widest font-medium transition-all flex items-center justify-center space-x-2 shadow-xs press-scale rounded-xs"
               >
                 {addedNotice ? (
                   <>
@@ -241,7 +310,7 @@ export default function ProductDetailPage() {
 
             {/* Unique 1-of-1 Piece Guarantee & No Return Policy */}
             <div className="space-y-2 pt-2">
-              <div className="bg-[#FAF9F5] p-3.5 border border-[#E5E3DC] text-[11px] text-neutral-600 space-y-1">
+              <div className="bg-[#FAF9F5] p-3.5 border border-[#E5E3DC] text-[11px] text-neutral-600 space-y-1 rounded-xs">
                 <div className="flex items-center space-x-1.5 text-neutral-900 font-semibold">
                   <Sparkles size={13} className="text-[#0D3D2E]" />
                   <span>Auto-Delete Guarantee</span>
@@ -322,6 +391,102 @@ export default function ProductDetailPage() {
           </div>
         </div>
       </div>
+
+      {/* FULL-SCREEN APPLE SPRING EXPANDED LIGHTBOX */}
+      {isLightboxOpen && (
+        <div className="fixed inset-0 z-50 bg-black/90 backdrop-blur-xl flex flex-col justify-between p-4 sm:p-8 animate-fade-in">
+          
+          {/* Top Bar: Title, Size badge, and Close */}
+          <div className="flex items-center justify-between text-white w-full max-w-6xl mx-auto pb-4 border-b border-white/10">
+            <div>
+              <span className="text-[10px] uppercase tracking-widest text-emerald-400 font-semibold block">
+                TERRY WOMEN ATELIER
+              </span>
+              <h3 className="font-serif text-xl sm:text-2xl text-white mt-0.5">
+                {product.name}
+              </h3>
+              <span className="text-xs text-neutral-300">
+                Exclusive Size: <strong>{product.sizes[0]}</strong> · ₹{product.price.toLocaleString("en-IN")}
+              </span>
+            </div>
+
+            <button
+              onClick={() => setIsLightboxOpen(false)}
+              className="p-2.5 bg-white/10 hover:bg-white/20 rounded-full text-white transition-colors press-scale"
+              aria-label="Close enlarged view"
+            >
+              <X size={22} />
+            </button>
+          </div>
+
+          {/* Center Stage: Enlarged Image with Next/Prev Arrows */}
+          <div className="relative flex-1 flex items-center justify-center my-4 overflow-hidden">
+            {/* Left Prev Arrow */}
+            {product.images.length > 1 && (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setLightboxIndex((prev) => (prev - 1 + product.images.length) % product.images.length);
+                }}
+                className="absolute left-2 sm:left-6 z-10 p-3 bg-black/60 hover:bg-black/90 text-white rounded-full transition-all press-scale border border-white/20 shadow-lg"
+                aria-label="Previous image"
+              >
+                <ChevronLeft size={24} />
+              </button>
+            )}
+
+            {/* Enlarged Big Photo */}
+            <div className="relative w-full max-w-3xl h-full max-h-[75vh] animate-modal-expand">
+              <Image
+                key={lightboxIndex}
+                src={product.images[lightboxIndex] || product.images[0]}
+                alt={`${product.name} enlarged view`}
+                fill
+                priority
+                className="object-contain"
+              />
+            </div>
+
+            {/* Right Next Arrow */}
+            {product.images.length > 1 && (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setLightboxIndex((prev) => (prev + 1) % product.images.length);
+                }}
+                className="absolute right-2 sm:right-6 z-10 p-3 bg-black/60 hover:bg-black/90 text-white rounded-full transition-all press-scale border border-white/20 shadow-lg"
+                aria-label="Next image"
+              >
+                <ChevronRight size={24} />
+              </button>
+            )}
+          </div>
+
+          {/* Bottom Thumbnail Strip */}
+          {product.images.length > 1 && (
+            <div className="flex items-center justify-center space-x-3 w-full max-w-xl mx-auto pt-4 border-t border-white/10">
+              {product.images.map((img, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => setLightboxIndex(idx)}
+                  className={`relative w-14 h-18 bg-white/10 rounded-sm overflow-hidden transition-all duration-300 press-scale ${
+                    lightboxIndex === idx
+                      ? "ring-2 ring-emerald-400 scale-110 shadow-lg"
+                      : "opacity-60 hover:opacity-100"
+                  }`}
+                >
+                  <Image
+                    src={img}
+                    alt={`Thumbnail ${idx + 1}`}
+                    fill
+                    className="object-cover"
+                  />
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }

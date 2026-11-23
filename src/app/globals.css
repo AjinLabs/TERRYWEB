@@ -133,6 +133,36 @@ h1, h2, h3, h4, .font-serif {
   animation: springSlideLeft 0.35s var(--apple-spring-crit) forwards;
 }
 
+@keyframes springZoomIn {
+  0% {
+    opacity: 0.85;
+    transform: scale(0.94);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes springModalExpand {
+  0% {
+    opacity: 0;
+    transform: scale(0.88);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-zoom-in {
+  animation: springZoomIn 0.35s var(--apple-spring-crit) forwards;
+}
+
+.animate-modal-expand {
+  animation: springModalExpand 0.35s var(--apple-spring-crit) forwards;
+}
+
 /* Accessibility: Reduced Motion */
 @media (prefers-reduced-motion: reduce) {
   * {
