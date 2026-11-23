@@ -28,15 +28,15 @@ export default function Navbar() {
         <span>Complimentary Express Delivery Across Kerala & India · Handcrafted 1-of-1 Boutique Pieces · 100% Secure Online Checkout</span>
       </div>
 
-      {/* Main Navigation */}
-      <header className="sticky top-0 z-40 bg-[#FAF9F5]/95 backdrop-blur-md border-b border-[#E8E6DF] transition-all">
+      {/* Main Navigation with Apple Translucent Material */}
+      <header className="sticky top-0 z-40 apple-glass transition-all">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
           
           {/* Mobile menu toggle */}
           <div className="flex items-center lg:hidden">
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 text-neutral-800 hover:text-black focus:outline-none"
+              className="p-2 text-neutral-800 hover:text-black focus:outline-none press-scale"
               aria-label="Toggle Navigation"
             >
               {mobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
@@ -90,7 +90,7 @@ export default function Navbar() {
             {/* Search Trigger */}
             <button
               onClick={() => setSearchOpen(!searchOpen)}
-              className="p-1 hover:text-black transition-colors"
+              className="p-1 hover:text-black transition-colors press-scale"
               title="Search Collection"
             >
               <Search size={20} strokeWidth={1.5} />
@@ -101,7 +101,7 @@ export default function Navbar() {
               <div className="flex items-center space-x-2">
                 <Link
                   href="/admin"
-                  className="inline-flex items-center space-x-1.5 px-2.5 py-1 text-[11px] uppercase tracking-wider font-semibold bg-[#0D3D2E] text-white rounded hover:bg-[#092b20] transition-colors"
+                  className="inline-flex items-center space-x-1.5 px-2.5 py-1 text-[11px] uppercase tracking-wider font-semibold bg-[#0D3D2E] text-white rounded hover:bg-[#092b20] transition-colors press-scale"
                   title="Admin Dashboard"
                 >
                   <ShieldCheck size={14} />
@@ -111,7 +111,7 @@ export default function Navbar() {
             ) : user ? (
               <Link
                 href="/account"
-                className="p-1 hover:text-black transition-colors flex items-center space-x-1"
+                className="p-1 hover:text-black transition-colors flex items-center space-x-1 press-scale"
                 title="My Account"
               >
                 <UserIcon size={20} strokeWidth={1.5} />
@@ -122,7 +122,7 @@ export default function Navbar() {
             ) : (
               <Link
                 href="/login"
-                className="p-1 hover:text-black transition-colors flex items-center space-x-1"
+                className="p-1 hover:text-black transition-colors flex items-center space-x-1 press-scale"
                 title="Login / Account"
               >
                 <UserIcon size={20} strokeWidth={1.5} />
@@ -135,7 +135,7 @@ export default function Navbar() {
             {/* Shopping Bag Trigger */}
             <button
               onClick={() => setIsCartOpen(true)}
-              className="relative p-1 hover:text-black transition-colors"
+              className="relative p-1 hover:text-black transition-colors press-scale"
               title="Shopping Selection Bag"
             >
               <ShoppingBag size={21} strokeWidth={1.5} />

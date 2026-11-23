@@ -27,12 +27,12 @@ export default function CartDrawer() {
       />
 
       <div className="fixed inset-y-0 right-0 max-w-full flex pl-10">
-        <div className="w-screen max-w-md bg-[#FAF9F5] border-l border-[#E5E3DC] shadow-2xl flex flex-col">
+        <div className="w-screen max-w-md bg-[#FAF9F5] border-l border-[#E5E3DC] shadow-2xl flex flex-col animate-slide-left">
           
           {/* Header */}
           <div className="p-6 border-b border-[#E8E6DF] flex items-center justify-between">
             <div>
-              <span className="text-[10px] uppercase tracking-widest text-[#0D3D2E] font-semibold block">
+              <span className="text-[10px] uppercase tracking-widest text-[#0D3D2E] font-semibold block optical-badge">
                 Boutique Bag
               </span>
               <h3 className="font-serif text-2xl text-neutral-900 mt-0.5">
@@ -41,7 +41,7 @@ export default function CartDrawer() {
             </div>
             <button
               onClick={() => setIsCartOpen(false)}
-              className="p-1.5 text-neutral-500 hover:text-black transition-colors"
+              className="p-1.5 text-neutral-500 hover:text-black transition-colors press-scale"
               aria-label="Close cart"
             >
               <X size={20} />
@@ -92,7 +92,7 @@ export default function CartDrawer() {
                         </h4>
                         <button
                           onClick={() => removeItem(item.cartItemId)}
-                          className="text-neutral-400 hover:text-red-600 transition-colors ml-2"
+                          className="text-neutral-400 hover:text-red-600 transition-colors ml-2 press-scale p-1"
                           title="Remove item"
                         >
                           <Trash2 size={14} />
@@ -115,10 +115,10 @@ export default function CartDrawer() {
 
                     <div className="flex items-center justify-between pt-3">
                       {/* Quantity Controls */}
-                      <div className="flex items-center border border-neutral-300 bg-white">
+                      <div className="flex items-center border border-neutral-300 bg-white rounded-xs">
                         <button
                           onClick={() => updateQuantity(item.cartItemId, item.quantity - 1)}
-                          className="p-1 hover:bg-neutral-100 text-neutral-600"
+                          className="p-1 hover:bg-neutral-100 text-neutral-600 press-scale"
                           aria-label="Decrease quantity"
                         >
                           <Minus size={12} />
@@ -128,7 +128,7 @@ export default function CartDrawer() {
                         </span>
                         <button
                           onClick={() => updateQuantity(item.cartItemId, item.quantity + 1)}
-                          className="p-1 hover:bg-neutral-100 text-neutral-600"
+                          className="p-1 hover:bg-neutral-100 text-neutral-600 press-scale"
                           aria-label="Increase quantity"
                         >
                           <Plus size={12} />
@@ -177,11 +177,11 @@ export default function CartDrawer() {
                 </div>
               </div>
 
-              {/* Primary Direct Checkout Action */}
+              {/* Primary Direct Checkout Action with Apple press physics */}
               <Link
                 href="/checkout"
                 onClick={() => setIsCartOpen(false)}
-                className="w-full py-4 bg-[#0D3D2E] hover:bg-[#08281e] text-white text-xs uppercase tracking-widest font-semibold flex items-center justify-center space-x-2 transition-all shadow-md active:scale-[0.99] rounded-xs"
+                className="w-full py-4 bg-[#0D3D2E] hover:bg-[#08281e] text-white text-xs uppercase tracking-widest font-semibold flex items-center justify-center space-x-2 transition-all shadow-md press-scale rounded-xs"
               >
                 <span>Proceed to Checkout · ₹{subtotal.toLocaleString("en-IN")}</span>
                 <ArrowRight size={16} />

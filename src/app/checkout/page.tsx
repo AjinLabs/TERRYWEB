@@ -370,7 +370,7 @@ export default function CheckoutPage() {
                 <div className="pt-2 flex items-center justify-between">
                   <button
                     type="submit"
-                    className="inline-flex items-center space-x-2 px-6 py-2.5 bg-[#0D3D2E] hover:bg-[#08281e] text-white text-xs uppercase tracking-wider font-medium rounded-full transition-colors shadow-xs"
+                    className="inline-flex items-center space-x-2 px-6 py-2.5 bg-[#0D3D2E] hover:bg-[#08281e] text-white text-xs uppercase tracking-wider font-medium rounded-full transition-colors shadow-xs press-scale"
                   >
                     <MapPin size={14} />
                     <span>{addressSaved ? "Address Saved ✓" : "Save Address"}</span>
@@ -429,7 +429,7 @@ export default function CheckoutPage() {
                 <button
                   type="button"
                   onClick={() => setPaymentMethod("upi")}
-                  className={`p-4 rounded-xl border text-left transition-all relative flex flex-col justify-between ${
+                  className={`p-4 rounded-xl border text-left transition-all relative flex flex-col justify-between press-scale ${
                     paymentMethod === "upi"
                       ? "border-[#0D3D2E] bg-[#F3F8F5] ring-1 ring-[#0D3D2E]"
                       : "border-[#DDD9CE] hover:border-neutral-400 bg-white"
@@ -453,7 +453,7 @@ export default function CheckoutPage() {
                 <button
                   type="button"
                   onClick={() => setPaymentMethod("card")}
-                  className={`p-4 rounded-xl border text-left transition-all relative flex flex-col justify-between ${
+                  className={`p-4 rounded-xl border text-left transition-all relative flex flex-col justify-between press-scale ${
                     paymentMethod === "card"
                       ? "border-[#0D3D2E] bg-[#F3F8F5] ring-1 ring-[#0D3D2E]"
                       : "border-[#DDD9CE] hover:border-neutral-400 bg-white"
@@ -477,7 +477,7 @@ export default function CheckoutPage() {
                 <button
                   type="button"
                   onClick={() => setPaymentMethod("netbanking")}
-                  className={`p-4 rounded-xl border text-left transition-all relative flex flex-col justify-between ${
+                  className={`p-4 rounded-xl border text-left transition-all relative flex flex-col justify-between press-scale ${
                     paymentMethod === "netbanking"
                       ? "border-[#0D3D2E] bg-[#F3F8F5] ring-1 ring-[#0D3D2E]"
                       : "border-[#DDD9CE] hover:border-neutral-400 bg-white"

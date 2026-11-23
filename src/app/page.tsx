@@ -115,7 +115,7 @@ export default function HomePage() {
             <button
               key={cat}
               onClick={() => setSelectedCategory(cat)}
-              className={`px-3 py-1.5 text-xs uppercase tracking-wider font-medium transition-all ${
+              className={`px-3 py-1.5 text-xs uppercase tracking-wider font-medium transition-all press-scale ${
                 selectedCategory.toLowerCase() === cat.toLowerCase()
                   ? "bg-black text-white"
                   : "bg-white text-neutral-700 border border-neutral-300 hover:border-black"
@@ -128,12 +128,12 @@ export default function HomePage() {
 
         {/* Quick Size Pills & Clear */}
         <div className="flex flex-wrap items-center gap-2">
-          <span className="text-[11px] text-neutral-500 uppercase tracking-wider font-semibold">Size:</span>
+          <span className="text-[11px] text-neutral-500 uppercase tracking-wider font-semibold optical-badge">Size:</span>
           {ALL_SIZES.map((sz) => (
             <button
               key={sz}
               onClick={() => setSelectedSize(selectedSize === sz ? "" : sz)}
-              className={`px-2.5 py-1 text-xs font-semibold uppercase border transition-all ${
+              className={`px-2.5 py-1 text-xs font-semibold uppercase border transition-all press-scale ${
                 selectedSize === sz
                   ? "bg-black text-white border-black"
                   : "bg-white text-neutral-700 border-neutral-300 hover:border-black"
@@ -146,7 +146,7 @@ export default function HomePage() {
           {hasActiveFilters && (
             <button
               onClick={resetFilters}
-              className="ml-2 text-[10px] text-[#0D3D2E] hover:underline uppercase tracking-wider font-semibold flex items-center space-x-1"
+              className="ml-2 text-[10px] text-[#0D3D2E] hover:underline uppercase tracking-wider font-semibold flex items-center space-x-1 press-scale"
             >
               <RotateCcw size={11} />
               <span>Reset</span>
@@ -184,7 +184,7 @@ export default function HomePage() {
           </button>
         </div>
       ) : (
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 animate-spring-in">
           {filteredProducts.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}

@@ -6,9 +6,19 @@
 
 :root {
   --font-serif: 'Cormorant Garamond', Georgia, serif;
-  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'SF Pro Display', sans-serif;
   --background: #FAF9F5;
   --foreground: #121212;
+  --apple-spring-crit: cubic-bezier(0.16, 1, 0.3, 1);
+  --apple-spring-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
@@ -17,51 +27,138 @@ body {
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
+/* Response: Kill latency on all buttons & links */
+button, a, input, select {
+  touch-action: manipulation;
+}
+
+/* Apple Fluid Typography */
 h1, h2, h3, h4, .font-serif {
   font-family: var(--font-serif);
+  letter-spacing: -0.025em; /* Optical negative tracking for display */
+  line-height: 1.1;
 }
 
-/* Custom scrollbars for high luxury minimal look */
+.optical-badge {
+  letter-spacing: 0.12em; /* Positive tracking for small caps */
+}
+
+/* Translucent Materials & Depth (Apple Glass) */
+.apple-glass {
+  background: rgba(250, 249, 245, 0.85);
+  backdrop-filter: blur(20px) saturate(190%);
+  -webkit-backdrop-filter: blur(20px) saturate(190%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.6);
+}
+
+.apple-glass-dark {
+  background: rgba(18, 18, 18, 0.85);
+  backdrop-filter: blur(20px) saturate(190%);
+  -webkit-backdrop-filter: blur(20px) saturate(190%);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Instant Press Feedback: 1:1 Response on pointer-down */
+.press-scale {
+  transition: transform 120ms var(--apple-spring-crit), opacity 120ms ease-out;
+}
+.press-scale:active {
+  transform: scale(0.97);
+}
+
+/* Luxury button transitions */
+.btn-boutique {
+  @apply relative inline-flex items-center justify-center px-8 py-3.5 text-xs uppercase tracking-widest font-medium transition-all;
+  transition-timing-function: var(--apple-spring-crit);
+  transition-duration: 300ms;
+}
+
+.btn-boutique:active {
+  transform: scale(0.97);
+}
+
+.btn-boutique-dark {
+  @apply btn-boutique bg-black text-white hover:bg-neutral-800;
+}
+
+.btn-boutique-emerald {
+  @apply btn-boutique bg-[#0D3D2E] text-white hover:bg-[#08281e];
+}
+
+/* Custom scrollbars */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
 }
 ::-webkit-scrollbar-track {
-  background: #f1ede2;
+  background: #f4f1ea;
 }
 ::-webkit-scrollbar-thumb {
   background: #c5a880;
-  border-radius: 3px;
+  border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
   background: #9c825d;
 }
 
-/* Luxury button transitions */
-.btn-boutique {
-  @apply relative inline-flex items-center justify-center px-8 py-3.5 text-xs uppercase tracking-widest font-medium transition-all duration-300;
+/* Spring Animations */
+@keyframes springFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(8px) scale(0.99);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
-.btn-boutique-dark {
-  @apply btn-boutique bg-black text-white hover:bg-neutral-800 active:scale-[0.99];
+@keyframes springSlideLeft {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(0);
+  }
 }
 
-.btn-boutique-outline {
-  @apply btn-boutique border border-neutral-900 text-neutral-900 hover:bg-neutral-900 hover:text-white;
+.animate-spring-in {
+  animation: springFadeIn 0.35s var(--apple-spring-crit) forwards;
 }
 
-.btn-boutique-gold {
-  @apply btn-boutique bg-[#0D3D2E] text-white hover:bg-[#08281e];
+.animate-slide-left {
+  animation: springSlideLeft 0.35s var(--apple-spring-crit) forwards;
 }
 
-/* Smooth fade in */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(6px); }
-  to { opacity: 1; transform: translateY(0); }
+/* Accessibility: Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .press-scale:active, .btn-boutique:active {
+    transform: none !important;
+  }
+  .animate-spring-in, .animate-slide-left {
+    animation: none !important;
+  }
 }
 
-.animate-fade-in {
-  animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+/* Accessibility: Reduced Transparency */
+@media (prefers-reduced-transparency: reduce) {
+  .apple-glass {
+    background: #FAF9F5 !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+  .apple-glass-dark {
+    background: #141413 !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
 }
